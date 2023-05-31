@@ -1,0 +1,178 @@
+---
+title: Managing dropout in mHealth interventions
+author:
+  - name: Vinayak Anand Kumar
+    affil: 1
+    orcid: '0000-0002-2972-5887'
+    main: TRUE
+  - name: Luisa Korte
+    affil: 2
+  - name: Claas Oltmann
+    affil: 2
+  - name: Prof. Dr. Margrit Schreier
+    affil: 1
+  - name: Prof. Dr. Sonia Lippke
+    affil: 1
+affiliation:
+  - num: 1
+    address: School of Business, Social & Decision Sciences | Constructor University
+  - num: 2
+    address: Bremen | apprevent GmbH
+main_findings:
+  - "Impute using **MICE for precision**."
+  - "Impute using **J2R to be conservative**." 
+  - "Leverage **open source tools to co-create and cascade.**"
+logoleft_name: 'images/betterhexlogo.png'
+logoright_name: 'images/qr-code-modified.png'
+primary_colour: "#E9AC61"
+secondary_colour: "#85DEE3"
+accent_colour: "#E0EEED"
+output: 
+  posterdown::posterdown_betterport:
+    self_contained: false
+    pandoc_args: --mathjax
+    highlight: haddock
+    number_sections: false
+link-citations: true
+knit: pagedown::chrome_print
+---
+
+```{r, include=FALSE}
+knitr::opts_chunk$set(results = 'asis',
+                      echo = FALSE,
+                      warning = FALSE,
+                      tidy = FALSE,
+                      message = FALSE,
+                      fig.align = 'center',
+                      out.width = "100%")
+options(knitr.table.format = "html") 
+```
+
+# Introduction
+
+The purpose of the study was to compare approaches and provide **recommendations for managing dropouts** in the evaluation of mHealth interventions targeting **physical activity (PA)**, **sedentary behaviour (SB)** and **selfcare** in patients following cardiovascular rehabilitation. Participant’ drop out between measurement time points is an issue that most studies face. Using work carried out to manage dropouts in a digital health tool, this study addresses the research question **“what is the relative accuracy and precision of imputation strategies when evaluating effectiveness of digital health tools”?**
+
+# Methods & Results
+
+Comparing the impact of the following data management strategies on estimating the treatment effect on key outcome variables in a digital health tool:  
+  
+  i) Multiple Imputation Using Chained Equations (MICE)  
+  ii) Jump to Reference Imputation (J2R)  
+  iii) Last Observation Carried Forward (LOCF)  
+  iv) Listwise deletion
+
+Scan the QR code for:  
+  
+  - Detailed outline of the methods  
+  - Code used to carry out the simulation study  
+  - Code used to generate the poster  
+  - List of references
+
+
+```{r, bias_variance, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(ggplot2)
+
+ggplot() + 
+  xlim(-100, 100) +
+  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = -30, sd = 5)) +
+  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = -35, sd = 5)) +
+  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = -20, sd = 10)) +
+  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = -60, sd = 10)) +
+  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = -50, sd = 40)) + 
+  labs(title = "Estimating treatment effect on sedentary behaviour", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") +
+  xlab("Parameter estimate") + 
+  ylab("Density") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic")
+  ) + 
+  guides(colour = guide_legend(title = "Data management"))
+
+ggplot() + 
+  xlim(-100, 100) +
+  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 30, sd = 5)) +
+  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 35, sd = 5)) +
+  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 20, sd = 10)) +
+  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 60, sd = 10)) +
+  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 50, sd = 40)) + 
+  labs(title = "Estimating treatment effect on moderate physical activity", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") +
+  xlab("Parameter estimate") + 
+  ylab("Density") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic")
+  ) + 
+  guides(colour = guide_legend(title = "Data management"))
+
+ggplot() + 
+  xlim(-100, 100) +
+  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 20, sd = 2)) +
+  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 30, sd = 5)) +
+  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 10, sd = 10)) +
+  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 60, sd = 10)) +
+  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 50, sd = 40)) + 
+  labs(title = "Estimating treatment effect on vigorous physical activity", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") +
+  xlab("Parameter estimate") + 
+  ylab("Density") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic")
+  ) + 
+  guides(colour = guide_legend(title = "Data management"))
+
+ggplot() + 
+  xlim(-5, 15) +
+  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 3.5, sd = 0.5)) +
+  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 3, sd = 0.5)) +
+  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 2, sd = 1)) +
+  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 6, sd = 3)) +
+  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 5, sd = 4)) + 
+  labs(title = "Estimating treatment effect on cardiovascular selfcare", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") +
+  xlab("Parameter estimate") + 
+  ylab("Density") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic")
+  ) + 
+  guides(colour = guide_legend(title = "Data management"))
+
+```
+
+# Application
+
+## Co-create
+![](images/co_create_tools.png){width=100%} 
+<br>
+<br>
+<br>
+
+## Cascade
+![](images/cascade_tools.png){width=100%} 
+
+<br>
+<br>
+<br>
+<br>
+
+
+![](images/logo_no_change.png){width=100%}  
+  
+  
+Health CASCADE is a Marie Skłodowska-Curie Innovative Training Network funded by the European Union’s Horizon 2020 research and innovation programme under Marie Skłodowska-Curie grant agreement n° 956501

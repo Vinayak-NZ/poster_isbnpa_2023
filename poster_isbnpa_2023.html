@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+<title>Managing dropout in mHealth interventions</title>
+
+
+
+
+
+
+
+<!--
+Font-awesome icons ie github or twitter
+-->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/brands.css" integrity="sha384-n9+6/aSqa9lBidZMRCQHTHKJscPq6NW4pCQBiMmHdUCvPN8ZOg2zJJTkC7WIezWv" crossorigin="anonymous">
+
+<!--
+Google fonts api stuff
+-->
+<link href='https://fonts.googleapis.com/css?family=Special Elite' rel='stylesheet'>
+<link href='https://fonts.googleapis.com/css?family=Rasa' rel='stylesheet'>
+
+<!--
+Here are the required style attributes for css to make this poster work :)
+-->
+<style>
+@page {
+size: 36in 48in;
+margin: 0;
+padding: 0;
+}
+body {
+margin: 0px;
+padding: 0px;
+width: 36in;
+height: 48in;
+text-align: justify;
+font-size: 45px;
+line-height: 1.05;
+}
+/* RMarkdown Class Styles */
+/* center align leaflet map,
+from https://stackoverflow.com/questions/52112119/center-leaflet-in-a-rmarkdown-document */
+.html-widget {
+margin: auto;
+position: sticky;
+margin-top: 2cm;
+margin-bottom: 2cm;
+}
+.leaflet.html-widget.html-widget-static-bound.leaflet-container.leaflet-touch.leaflet-fade-anim.leaflet-grab.leaflet-touch-drag.leaflet-touch-zoom {
+position: sticky;
+width: 100%;
+}
+pre.sourceCode.r {
+background-color: #dddddd40;
+border-radius: 4mm;
+padding: 4mm;
+width: 75%;
+margin: auto;
+margin-top: 1em;
+margin-bottom: 1em;
+/* align-items: center; */
+}
+code.sourceCode.r{
+background-color: transparent;
+font-size: 20pt;
+border-radius: 2mm;
+}
+code {
+font-size: 25pt;
+font-family: monospace;
+background-color: #85DEE324;
+color: #E9AC61;
+padding: 1.2mm;
+line-height: 1;
+border-radius: 2mm;
+}
+caption {
+margin-bottom: 10px;
+font-size: 20pt;
+font-style: italic;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #85DEE320;
+}
+.table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
+  border-spacing: 0;
+  font-size: 40%;
+  border-style: none;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-right: 1em;
+  padding-left: 1em;
+  line-height: 1em;
+}
+table {
+  margin: auto;
+}
+th {
+  padding-left: 5mm;
+  padding-right: 5mm;
+}
+.caption {
+font-size: 20pt;
+font-style: italic;
+padding-top: 0;
+}
+.references {
+font-size: 20px;
+line-height: 90%;
+}
+/* Create three unequal columns that floats next to each other */
+.column {
+float: left;
+padding: 0px;
+}
+.outer {
+width: 36in;
+height: calc(48in *  0.6325 );
+-webkit-column-count: 3; /* Chrome, Safari, Opera */
+-moz-column-count: 3; /* Firefox */
+column-count: 3;
+-webkit-column-fill: auto;
+-moz-column-fill: auto;
+column-fill: auto;
+column-gap: 0;
+padding-left: 0cm;
+padding-right: 0cm;
+/* -webkit-column-rule-width: 50%;
+-moz-column-rule-width: 50%;
+column-rule-width: 50%; */
+-webkit-column-rule-style: none;
+-moz-column-rule-style: none;
+column-rule-style: none;
+-webkit-column-rule-color: black;
+-moz-column-rule-color: black;
+column-rule-color: black;
+background-color: #ffffff;
+font-family: Rasa;
+margin-top: calc(48in *  0.25 );
+padding-top: 1em;
+padding-bottom: 1em;
+}
+span.citation {
+  color: #85DEE3;
+  font-weight: bold;
+}
+a {
+text-decoration: none;
+color: #85DEE3;
+}
+#title {
+font-size: 125pt;
+text-align: left;
+margin: 0;
+line-height: 98%;
+border-bottom: 0;
+font-weight: normal;
+background: 0;
+}
+#author {
+color: #E9AC61;
+margin: 0;
+line-height: 85%;
+font-size: 1.17em;
+}
+#affiliation {
+padding-top: 0.1em;
+color: ;
+font-style: italic;
+font-size: 25px;
+margin: 0;
+}
+sup {
+color: #E0EEED;
+}
+.affiliation sup {
+font-size: 20px;
+}
+.author {
+text-align: left;
+}
+.author sup {
+font-size: 30px;
+}
+.author_extra {
+color: #85DEE3;
+margin: 0;
+line-height: 85%;
+font-size: 35px;
+text-align: left;
+}
+.outer h1, h2, h3, h4, h5, h6 {
+text-align: center;
+margin: 0;
+font-weight: bold;
+}
+.section h1 {
+  text-align:center;
+  padding-bottom:5px;
+  background:
+    linear-gradient(
+      to left,
+      #ffffff 1%,
+      #ffffff 20%,
+      #E9AC6175 33%,
+      #E9AC61 50%,
+      #E9AC6175 66%,
+      #ffffff 80%,
+      #ffffff 99%
+    )
+    left
+    bottom
+    #ffffff
+    no-repeat;
+  background-size:100% 5px ;
+  margin-top: 0.5em;
+  margin-bottom: 0.5em;
+}
+.outer h2 {
+text-align: center;
+}
+.outer p, .level2 {
+color: #000000;
+}
+.outer ol {
+padding-left: 8%;
+padding-right: 8%;
+text-align: left;
+}
+.main {
+width: 36in;
+height: calc(48in * 0.25);
+position: absolute;
+background-color: #E9AC61;
+color: #ffffff90;
+font-family: Special Elite;
+background-image: linear-gradient(#E9AC61 50%,#85DEE3);
+}
+.main strong {
+color: #ffffff;
+}
+.main strong > sup {
+color: #ffffff;
+}
+.main sup {
+color: #ffffff90;
+}
+#main-img-left {
+width: 10%;
+left: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+#main-img-center {
+width: 10%;
+left: calc(36in * 0.45);
+bottom: 0.5in;
+position: absolute;
+}
+#main-img-right {
+width: 10%;
+right: 0.5in;
+bottom: 0.2in;
+position: absolute;
+}
+.main p {
+font-size: 150px;
+font-family: Special Elite;
+text-align: center;
+margin: 0;
+position: absolute;
+top: 50%;
+-ms-transform: translateY(-50%);
+transform: translateY(-50%);
+margin-left: 1em;
+}
+.fab {
+color: #00000030;
+font-size: 25px;
+}
+.twitter, i {
+color: #00000030;
+font-size: 35px;
+text-decoration: none;
+}
+a.email {
+text-decoration: none;
+color: #00000030;
+font-size: 35px;
+}
+.envelope {
+color: #00000030;
+font-size: 5px;
+text-decoration: none;
+}
+.poster_wrap {
+width: 36in;
+height: 48in;
+padding: 0cm;
+}
+.main_bottom {
+width: 36in;
+height: calc(48in * 0.1);
+margin-top: calc(48in * 0.9);
+position: absolute;
+background-color: #E9AC61;
+background-image: linear-gradient(#85DEE3 10%, #E9AC61);
+}
+.section {
+  padding-left: 10mm;
+  padding-right: 10mm;
+}
+span > #tab:mytable {
+  font-weight: bold;
+}
+.orcid img {
+  width: 3%;
+}
+.emphasis {
+  background-color: #008080;
+  color: #ffffff;
+  border: solid #0b2045 3mm;
+  margin: 1em;
+  padding-left: 0;
+  padding-right: 0;
+}
+.emphasis h1 {
+  font-weight: bold;
+  background: none;
+  background-color: #0b2045;
+  padding-bottom: 5mm;
+  padding-top: 1mm;
+  margin-top: -1mm;
+  margin-right: -1mm;
+  margin-left: -1mm;
+}
+.emphasis blockquote {
+  border: 0;
+}
+.emphasis ol {
+  padding: 0;
+  padding-left: 8%;
+  font-size: 100%;
+  font-weight: bold;
+}
+.emphasis p {
+  color: #ffffff;
+}
+</style>
+</head>
+<body>
+
+
+<div class="poster_wrap">
+
+<div class="column outer">
+<div class="section">
+<h1 id="title">Managing dropout in mHealth interventions</h1><br>
+<h3 id="author" class="author">
+
+Vinayak Anand Kumar<sup> 1, <a class="orcid" href="https://orcid.org/0000-0002-2972-5887"><img src="https://raw.githubusercontent.com/brentthorne/posterdown/master/images/orcid.jpg"></a></sup><br>
+
+    </h3>
+
+<h5 id="author_extra", class="author_extra">
+ Luisa Korte<sup>2</sup>
+ Claas Oltmann<sup>2</sup>
+ Prof. Dr. Margrit Schreier<sup>1</sup>
+ Prof. Dr. Sonia Lippke<sup>1</sup>
+</h5>
+
+
+<p id="affiliation" class="affiliation">
+<sup>1</sup> School of Business, Social &amp; Decision Sciences | Constructor University<br> <sup>2</sup> Bremen | apprevent GmbH
+</p>
+</div>
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The purpose of the study was to compare approaches and provide <strong>recommendations for managing dropouts</strong> in the evaluation of mHealth interventions targeting <strong>physical activity (PA)</strong>, <strong>sedentary behaviour (SB)</strong> and <strong>selfcare</strong> in patients following cardiovascular rehabilitation. Participant’ drop out between measurement time points is an issue that most studies face. Using work carried out to manage dropouts in a digital health tool, this study addresses the research question <strong>“what is the relative accuracy and precision of imputation strategies when evaluating effectiveness of digital health tools”?</strong></p>
+</div>
+<div id="methods-results" class="section level1">
+<h1>Methods &amp; Results</h1>
+<p>Comparing the impact of the following data management strategies on estimating the treatment effect on key outcome variables in a digital health tool:</p>
+<ol style="list-style-type: lower-roman">
+<li>Multiple Imputation Using Chained Equations (MICE)<br />
+</li>
+<li>Jump to Reference Imputation (J2R)<br />
+</li>
+<li>Last Observation Carried Forward (LOCF)<br />
+</li>
+<li>Listwise deletion</li>
+</ol>
+<p>Scan the QR code for:</p>
+<ul>
+<li>Detailed outline of the methods<br />
+</li>
+<li>Code used to carry out the simulation study<br />
+</li>
+<li>Code used to generate the poster<br />
+</li>
+<li>List of references</li>
+</ul>
+<p><img src="poster_isbnpa_2023_files/figure-html/bias_variance-1.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-2.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-3.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-4.png" width="100%" style="display: block; margin: auto;" /></p>
+</div>
+<div id="application" class="section level1">
+<h1>Application</h1>
+<div id="co-create" class="section level2">
+<h2>Co-create</h2>
+<p><img src="images/co_create_tools.png" style="width:100.0%" />
+<br>
+<br>
+<br></p>
+</div>
+<div id="cascade" class="section level2">
+<h2>Cascade</h2>
+<p><img src="images/cascade_tools.png" style="width:100.0%" /></p>
+<p><br>
+<br>
+<br>
+<br></p>
+<p><img src="images/logo_no_change.png" style="width:100.0%" /></p>
+<p>Health CASCADE is a Marie Skłodowska-Curie Innovative Training Network funded by the European Union’s Horizon 2020 research and innovation programme under Marie Skłodowska-Curie grant agreement n° 956501</p>
+</div>
+</div>
+
+</div>
+<div class="main">
+<p>Impute using <strong>MICE for precision</strong>.<br><br> Impute using <strong>J2R to be conservative</strong>.<br><br> Leverage <strong>open source tools to co-create and cascade.</strong></p>
+</div>
+<div class="main_bottom">
+<img id="main-img-left" src=images/betterhexlogo.png>
+<img id="main-img-center" src=>
+<img id="main-img-right" src=images/qr-code-modified.png>
+</div>
+</div>
+
+
+
+</body>
+</html>
