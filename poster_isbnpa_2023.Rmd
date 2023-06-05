@@ -23,10 +23,7 @@ main_findings:
   - "Impute using **J2R to be conservative**." 
   - "Leverage **open source tools to co-create and cascade.**"
 logoleft_name: 'images/betterhexlogo.png'
-logoright_name: 'images/qr-code-modified.png'
-primary_colour: "#E9AC61"
-secondary_colour: "#85DEE3"
-accent_colour: "#E0EEED"
+logoright_name: 'images/qr_code_modified.png'
 output: 
   posterdown::posterdown_betterport:
     self_contained: false
@@ -48,114 +45,226 @@ knitr::opts_chunk$set(results = 'asis',
 options(knitr.table.format = "html") 
 ```
 
-# Introduction
+# The drop out problem
 
-The purpose of the study was to compare approaches and provide **recommendations for managing dropouts** in the evaluation of mHealth interventions targeting **physical activity (PA)**, **sedentary behaviour (SB)** and **selfcare** in patients following cardiovascular rehabilitation. Participant’ drop out between measurement time points is an issue that most studies face. Using work carried out to manage dropouts in a digital health tool, this study addresses the research question **“what is the relative accuracy and precision of imputation strategies when evaluating effectiveness of digital health tools”?**
-
-# Methods & Results
-
-Comparing the impact of the following data management strategies on estimating the treatment effect on key outcome variables in a digital health tool:  
-  
-  i) Multiple Imputation Using Chained Equations (MICE)  
-  ii) Jump to Reference Imputation (J2R)  
-  iii) Last Observation Carried Forward (LOCF)  
-  iv) Listwise deletion
-
-Scan the QR code for:  
-  
-  - Detailed outline of the methods  
-  - Code used to carry out the simulation study  
-  - Code used to generate the poster  
-  - List of references
-
-
-```{r, bias_variance, warning=FALSE, echo=FALSE, message = FALSE}
+```{r, problem_time, warning=FALSE, echo=FALSE, message = FALSE}
 
 library(ggplot2)
 
-ggplot() + 
-  xlim(-100, 100) +
-  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = -30, sd = 5)) +
-  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = -35, sd = 5)) +
-  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = -20, sd = 10)) +
-  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = -60, sd = 10)) +
-  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = -50, sd = 40)) + 
-  labs(title = "Estimating treatment effect on sedentary behaviour", 
-       subtitle = "Bias and variance of missing data treatment",
-       caption = "Data source: Simulation study") +
-  xlab("Parameter estimate") + 
-  ylab("Density") + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
-        plot.subtitle = element_text(color = "#454543", face = "bold"),
-        plot.caption = element_text(color = "#454543", face = "italic")
-  ) + 
-  guides(colour = guide_legend(title = "Data management"))
+data <- data.frame(time_point = c("t0", "t1", "t2", "t3"),
+                   y = c(0, 20, 40, 60))
 
-ggplot() + 
-  xlim(-100, 100) +
-  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 30, sd = 5)) +
-  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 35, sd = 5)) +
-  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 20, sd = 10)) +
-  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 60, sd = 10)) +
-  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 50, sd = 40)) + 
-  labs(title = "Estimating treatment effect on moderate physical activity", 
-       subtitle = "Bias and variance of missing data treatment",
-       caption = "Data source: Simulation study") +
-  xlab("Parameter estimate") + 
-  ylab("Density") + 
+ggplot(data=data, aes(x=time_point, y=y, fill = time_point)) +
+  geom_bar(stat="identity") + 
+  coord_flip() + 
+  scale_fill_manual(values = c("t0" = "#FFFFFF", 
+                               "t1" = "#46e7fd", 
+                               "t2" = "#4739a2", 
+                               "t3" = "#e18b22"), 
+                    guide = "none") + 
+  labs(title = "Missing data", 
+       subtitle = "Increases in drop out over time",
+       caption = "Data source: Hypothetical case") + 
+  xlab("Measurement time point") + 
+  ylab("Percentage of drop out") + 
   theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
         panel.background = element_blank(), axis.line = element_line(colour = "black"), 
         plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
         plot.subtitle = element_text(color = "#454543", face = "bold"),
-        plot.caption = element_text(color = "#454543", face = "italic")
-  ) + 
-  guides(colour = guide_legend(title = "Data management"))
-
-ggplot() + 
-  xlim(-100, 100) +
-  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 20, sd = 2)) +
-  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 30, sd = 5)) +
-  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 10, sd = 10)) +
-  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 60, sd = 10)) +
-  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 50, sd = 40)) + 
-  labs(title = "Estimating treatment effect on vigorous physical activity", 
-       subtitle = "Bias and variance of missing data treatment",
-       caption = "Data source: Simulation study") +
-  xlab("Parameter estimate") + 
-  ylab("Density") + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
-        plot.subtitle = element_text(color = "#454543", face = "bold"),
-        plot.caption = element_text(color = "#454543", face = "italic")
-  ) + 
-  guides(colour = guide_legend(title = "Data management"))
-
-ggplot() + 
-  xlim(-5, 15) +
-  geom_function(aes(colour = "Observed"), fun = dnorm, args = list(mean = 3.5, sd = 0.5)) +
-  geom_function(aes(colour = "imputation = MICE"), fun = dnorm, args = list(mean = 3, sd = 0.5)) +
-  geom_function(aes(colour = "imputation = J2R"), fun = dnorm, args = list(mean = 2, sd = 1)) +
-  geom_function(aes(colour = "imputation = LOCF"), fun = dnorm, args = list(mean = 6, sd = 3)) +
-  geom_function(aes(colour = "Listwise deletion"), fun = dnorm, args = list(mean = 5, sd = 4)) + 
-  labs(title = "Estimating treatment effect on cardiovascular selfcare", 
-       subtitle = "Bias and variance of missing data treatment",
-       caption = "Data source: Simulation study") +
-  xlab("Parameter estimate") + 
-  ylab("Density") + 
-  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
-        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
-        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
-        plot.subtitle = element_text(color = "#454543", face = "bold"),
-        plot.caption = element_text(color = "#454543", face = "italic")
-  ) + 
-  guides(colour = guide_legend(title = "Data management"))
+        plot.caption = element_text(color = "#454543", face = "italic"))
 
 ```
 
-# Application
+
+```{r, problem_variable, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(data.table)
+library(ggplot2)
+library(tidyverse)
+
+data4 <- data.frame(id = c(1:40),
+                    sedentary_behaviour = abs(rnorm(40, 15, 10)), 
+                    walking = abs(rnorm(40, 32, 5)), 
+                    moderate = abs(rnorm(40, 22, 3)),
+                    vigorous = abs(rnorm(40, 7, 1)), 
+                    time = "t3")
+
+data4$sedentary_behaviour <- 
+  ifelse(data4$id %in% c(1:10), NA, data4$sedentary_behaviour)
+
+data4$sedentary_behaviour <- 
+  ifelse(data4$id %in% c(20:33), NA, data4$sedentary_behaviour)
+
+data4$walking <- 
+  ifelse(data4$id %in% c(35:40), NA, data4$walking)
+
+data4$moderate <- 
+  ifelse(data4$id %in% c(10:30), NA, data4$moderate)
+
+data4$vigorous <- 
+  ifelse(data4$id %in% c(1:5), NA, data4$vigorous)
+
+data4$vigorous <- 
+  ifelse(data4$id %in% c(35:40), NA, data4$vigorous)
+
+setDT(data4)
+
+data4 <- melt(data4, id.vars = c("id", "time"), 
+              variable.name = "variable")
+
+data4 %>%
+  ggplot(aes(x=variable, y=id, fill=value))+
+  geom_tile()+
+  scale_fill_continuous(low = '#46e7fd', 
+                        high = '#4739a2', 
+                        na.value = '#e18b22', 
+                        guide_legend(title = "Hours spent")) + 
+  labs(title = "Missing data", 
+       subtitle = "Missing data across variables at final measurement point",
+       caption = "Data source: Hypothetical case") + 
+  scale_x_discrete(labels = c("sedentary_behaviour" = "Sedentary", 
+                              "walking" = "Walking", 
+                              "moderate" = "Moderate", 
+                              "vigorous" = "vigorous")) +
+  xlab("Activity") + 
+  ylab("Cases with missingness") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic"), 
+        legend.position = "bottom")
+
+```
+<br>
+<br>
+
+# Data management strategies
+
+```{r, sedentary, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(ggplot2)
+
+data <- data.frame(x = c("MICE", "J2R", "LOCF", "LWD"),
+                         y = c(6, 4, 10, 7),
+                         lower = c(4, 1, 9, 1),
+                         upper = c(8, 7, 11, 14))
+
+data$x <- factor(data$x, levels = c("Observed", "MICE", "J2R", "LOCF", "LWD"))
+
+ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper)) + 
+  geom_hline(yintercept = 4, linetype = "dashed", size = 1, color = "#46e7fd") + 
+  geom_hline(yintercept = 5, size = 2, color = "#e18b22") + 
+  geom_hline(yintercept = 6, linetype = "dashed", size = 1, color = "#4739a2") + 
+  labs(title = "Estimating treatment effect on sedentary behaviour", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") + 
+  xlab("Method for managing dropout") + 
+  ylab("Parameter estimate") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic"))
+
+```
+
+
+```{r, walking, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(ggplot2)
+
+data <- data.frame(x = c("MICE", "J2R", "LOCF", "LWD"),
+                         y = c(6, 4, 10, 7),
+                         lower = c(4, 1, 9, 1),
+                         upper = c(8, 7, 11, 14))
+
+data$x <- factor(data$x, levels = c("Observed", "MICE", "J2R", "LOCF", "LWD"))
+
+ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper)) + 
+  geom_hline(yintercept = 4, linetype = "dashed", size = 1, color = "#46e7fd") + 
+  geom_hline(yintercept = 5, size = 2, color = "#e18b22") + 
+  geom_hline(yintercept = 6, linetype = "dashed", size = 1, color = "#4739a2") + 
+  labs(title = "Estimating treatment effect on walking", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") + 
+  xlab("Method for managing dropout") + 
+  ylab("Parameter estimate") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic"))
+
+```
+
+
+```{r, moderate, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(ggplot2)
+
+data <- data.frame(x = c("MICE", "J2R", "LOCF", "LWD"),
+                         y = c(6, 4, 10, 7),
+                         lower = c(4, 1, 9, 1),
+                         upper = c(8, 7, 11, 14))
+
+data$x <- factor(data$x, levels = c("Observed", "MICE", "J2R", "LOCF", "LWD"))
+
+ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper)) + 
+  geom_hline(yintercept = 4, linetype = "dashed", size = 1, color = "#46e7fd") + 
+  geom_hline(yintercept = 5, size = 2, color = "#e18b22") + 
+  geom_hline(yintercept = 6, linetype = "dashed", size = 1, color = "#4739a2") + 
+  labs(title = "Estimating treatment effect on moderate physical activity", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") + 
+  xlab("Method for managing dropout") + 
+  ylab("Parameter estimate") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic"))
+
+```
+
+
+```{r, vigorous, warning=FALSE, echo=FALSE, message = FALSE}
+
+library(ggplot2)
+
+data <- data.frame(x = c("MICE", "J2R", "LOCF", "LWD"),
+                         y = c(6, 4, 10, 7),
+                         lower = c(4, 1, 9, 1),
+                         upper = c(8, 7, 11, 14))
+
+data$x <- factor(data$x, levels = c("Observed", "MICE", "J2R", "LOCF", "LWD"))
+
+ggplot(data, aes(x, y)) +
+  geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper)) + 
+  geom_hline(yintercept = 4, linetype = "dashed", size = 1, color = "#46e7fd") + 
+  geom_hline(yintercept = 5, size = 2, color = "#e18b22") + 
+  geom_hline(yintercept = 6, linetype = "dashed", size = 1, color = "#4739a2") + 
+  labs(title = "Estimating treatment effect on vigorous physical activity", 
+       subtitle = "Bias and variance of missing data treatment",
+       caption = "Data source: Simulation study") + 
+  xlab("Method for managing dropout") + 
+  ylab("Parameter estimate") + 
+  theme(panel.grid.major = element_blank(), panel.grid.minor = element_blank(),
+        panel.background = element_blank(), axis.line = element_line(colour = "black"), 
+        plot.title = element_text(color = "#2F2E41", size = 12, face = "bold"),
+        plot.subtitle = element_text(color = "#454543", face = "bold"),
+        plot.caption = element_text(color = "#454543", face = "italic"))
+
+```
+
+# An Open approach to handling data
 
 ## Co-create
 ![](images/co_create_tools.png){width=100%} 

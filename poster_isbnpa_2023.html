@@ -77,8 +77,8 @@ border-radius: 2mm;
 code {
 font-size: 25pt;
 font-family: monospace;
-background-color: #85DEE324;
-color: #E9AC61;
+background-color: #00808024;
+color: #0b4545;
 padding: 1.2mm;
 line-height: 1;
 border-radius: 2mm;
@@ -90,7 +90,7 @@ font-style: italic;
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #85DEE320;
+    background-color: #00808020;
 }
 .table>thead>tr>th, .table>tbody>tr>th, .table>tfoot>tr>th, .table>thead>tr>td, .table>tbody>tr>td, .table>tfoot>tr>td{
   border-spacing: 0;
@@ -151,12 +151,12 @@ padding-top: 1em;
 padding-bottom: 1em;
 }
 span.citation {
-  color: #85DEE3;
+  color: #008080;
   font-weight: bold;
 }
 a {
 text-decoration: none;
-color: #85DEE3;
+color: #008080;
 }
 #title {
 font-size: 125pt;
@@ -168,7 +168,7 @@ font-weight: normal;
 background: 0;
 }
 #author {
-color: #E9AC61;
+color: #0b4545;
 margin: 0;
 line-height: 85%;
 font-size: 1.17em;
@@ -181,7 +181,7 @@ font-size: 25px;
 margin: 0;
 }
 sup {
-color: #E0EEED;
+color: #cc0000;
 }
 .affiliation sup {
 font-size: 20px;
@@ -193,7 +193,7 @@ text-align: left;
 font-size: 30px;
 }
 .author_extra {
-color: #85DEE3;
+color: #008080;
 margin: 0;
 line-height: 85%;
 font-size: 35px;
@@ -212,9 +212,9 @@ font-weight: bold;
       to left,
       #ffffff 1%,
       #ffffff 20%,
-      #E9AC6175 33%,
-      #E9AC61 50%,
-      #E9AC6175 66%,
+      #0b454575 33%,
+      #0b4545 50%,
+      #0b454575 66%,
       #ffffff 80%,
       #ffffff 99%
     )
@@ -241,10 +241,10 @@ text-align: left;
 width: 36in;
 height: calc(48in * 0.25);
 position: absolute;
-background-color: #E9AC61;
+background-color: #0b4545;
 color: #ffffff90;
 font-family: Special Elite;
-background-image: linear-gradient(#E9AC61 50%,#85DEE3);
+background-image: linear-gradient(#0b4545 50%,#008080);
 }
 .main strong {
 color: #ffffff;
@@ -313,8 +313,8 @@ width: 36in;
 height: calc(48in * 0.1);
 margin-top: calc(48in * 0.9);
 position: absolute;
-background-color: #E9AC61;
-background-image: linear-gradient(#85DEE3 10%, #E9AC61);
+background-color: #0b4545;
+background-image: linear-gradient(#008080 10%, #0b4545);
 }
 .section {
   padding-left: 10mm;
@@ -385,36 +385,22 @@ Vinayak Anand Kumar<sup> 1, <a class="orcid" href="https://orcid.org/0000-0002-2
 </p>
 </div>
 
-<div id="introduction" class="section level1">
-<h1>Introduction</h1>
-<p>The purpose of the study was to compare approaches and provide <strong>recommendations for managing dropouts</strong> in the evaluation of mHealth interventions targeting <strong>physical activity (PA)</strong>, <strong>sedentary behaviour (SB)</strong> and <strong>selfcare</strong> in patients following cardiovascular rehabilitation. Participant’ drop out between measurement time points is an issue that most studies face. Using work carried out to manage dropouts in a digital health tool, this study addresses the research question <strong>“what is the relative accuracy and precision of imputation strategies when evaluating effectiveness of digital health tools”?</strong></p>
+<div id="the-drop-out-problem" class="section level1">
+<h1>The drop out problem</h1>
+<p><img src="poster_isbnpa_2023_files/figure-html/problem_time-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="poster_isbnpa_2023_files/figure-html/problem_variable-1.png" width="100%" style="display: block; margin: auto;" />
+<br>
+<br></p>
 </div>
-<div id="methods-results" class="section level1">
-<h1>Methods &amp; Results</h1>
-<p>Comparing the impact of the following data management strategies on estimating the treatment effect on key outcome variables in a digital health tool:</p>
-<ol style="list-style-type: lower-roman">
-<li>Multiple Imputation Using Chained Equations (MICE)<br />
-</li>
-<li>Jump to Reference Imputation (J2R)<br />
-</li>
-<li>Last Observation Carried Forward (LOCF)<br />
-</li>
-<li>Listwise deletion</li>
-</ol>
-<p>Scan the QR code for:</p>
-<ul>
-<li>Detailed outline of the methods<br />
-</li>
-<li>Code used to carry out the simulation study<br />
-</li>
-<li>Code used to generate the poster<br />
-</li>
-<li>List of references</li>
-</ul>
-<p><img src="poster_isbnpa_2023_files/figure-html/bias_variance-1.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-2.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-3.png" width="100%" style="display: block; margin: auto;" /><img src="poster_isbnpa_2023_files/figure-html/bias_variance-4.png" width="100%" style="display: block; margin: auto;" /></p>
+<div id="data-management-strategies" class="section level1">
+<h1>Data management strategies</h1>
+<p><img src="poster_isbnpa_2023_files/figure-html/sedentary-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="poster_isbnpa_2023_files/figure-html/walking-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="poster_isbnpa_2023_files/figure-html/moderate-1.png" width="100%" style="display: block; margin: auto;" /></p>
+<p><img src="poster_isbnpa_2023_files/figure-html/vigorous-1.png" width="100%" style="display: block; margin: auto;" /></p>
 </div>
-<div id="application" class="section level1">
-<h1>Application</h1>
+<div id="an-open-approach-to-handling-data" class="section level1">
+<h1>An Open approach to handling data</h1>
 <div id="co-create" class="section level2">
 <h2>Co-create</h2>
 <p><img src="images/co_create_tools.png" style="width:100.0%" />
@@ -441,7 +427,7 @@ Vinayak Anand Kumar<sup> 1, <a class="orcid" href="https://orcid.org/0000-0002-2
 <div class="main_bottom">
 <img id="main-img-left" src=images/betterhexlogo.png>
 <img id="main-img-center" src=>
-<img id="main-img-right" src=images/qr-code-modified.png>
+<img id="main-img-right" src=images/qr_code_modified.png>
 </div>
 </div>
 
