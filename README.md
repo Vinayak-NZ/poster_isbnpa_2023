@@ -44,7 +44,8 @@ LWD: Listwise Deletion
 
 ## Code used to generate poster
 
-Please navigate to the file titled "poster_isbnpa_2023.Rmd" to access the code used to generate the poster.  
+Please navigate to the file titled "poster_isbnpa_2023.Rmd" in this repository to access the code used to generate the poster.  
+Or click the link [here](https://github.com/Vinayak-NZ/poster_isbnpa_2023/blob/main/poster_isbnpa_2023.Rmd).  
 
 ## My contact inforamtion  
 
