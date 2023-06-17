@@ -47,6 +47,26 @@ LWD: Listwise Deletion
 Please navigate to the file titled "poster_isbnpa_2023.Rmd" in this repository to access the code used to generate the poster.  
 Or click the link [here](https://github.com/Vinayak-NZ/poster_isbnpa_2023/blob/main/poster_isbnpa_2023.Rmd).  
 
+## Key Packages  
+
+### Poster
+
+[posterdown](https://cran.r-project.org/web/packages/posterdown/index.html)  
+
+[ggplot](https://cran.r-project.org/web/packages/ggplot2/index.html)  
+
+[flowchart](https://cran.r-project.org/web/packages/DiagrammeR/index.html)  
+
+### Simulation study
+
+[synthpop](https://cran.r-project.org/web/packages/synthpop/index.html)    
+
+[MICE](https://cran.r-project.org/web/packages/mice/index.html)  
+
+[sjmisc](https://cran.r-project.org/web/packages/sjmisc/index.html)  
+
+[mlmi](https://cran.r-project.org/web/packages/mlmi/index.html)  
+
 ## My contact inforamtion  
 
 Email: vanandkumar@constructor.university  
